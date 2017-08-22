@@ -159,12 +159,18 @@
 }
 
 
+#pragma mark - overwrite fuc
 - (NSString *)description
 {
   return @"a aitiveTouch view ";
 }
 
+- (void)removeFromSuperview
+{
+    [self remove];
+}
 
+#pragma mark - action
 - (void)show
 {
     [UIView animateWithDuration:self.showTime animations:^{
@@ -183,7 +189,7 @@
 {
     [UIView animateWithDuration:self.hiddenTime animations:^{
         [self.displayLinkAnimation stop];
-        [self  removeFromSuperview];
+        [super  removeFromSuperview];
     }];
 }
 
