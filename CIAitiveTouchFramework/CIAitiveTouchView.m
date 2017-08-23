@@ -22,6 +22,8 @@
 @property (nonatomic,assign) BOOL   isStartAnimation;
 @property (nonatomic,assign) NSInteger direction;
 @property (nonatomic,copy) voidBlock  tapVoidBlock;
+@property (nonatomic,strong) UITapGestureRecognizer  *viewTap;
+@property (nonatomic,strong) UIPanGestureRecognizer  *viewPan;
 
 @end
 
@@ -55,13 +57,13 @@
         self.direction = 1;
         self.unactivityAlpha = 0.3;
         self.activityAlpha = 1.0;
-        self.showTime = 0.3;
-        self.hiddenTime = 0.3;
+        self.showTime = 0.2;
+        self.hiddenTime = 0.2;
+        _isCanTouch = YES;
         self.alpha = self.unactivityAlpha;
-        UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGesture:)];
-        [self addGestureRecognizer:pan];
-        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGesture:)];
-        [self addGestureRecognizer:tap];
+        
+        [self managePan:YES];
+       
     }
     return self;
 }
@@ -71,12 +73,66 @@
 
 - (void)setTapGestureFuction:(voidBlock)block
 {
+    if (block)
+    {
+        [self manageTap:YES];
+    }
+    else
+    {
+        [self manageTap:NO];
+    }
     self.tapVoidBlock = block;
 }
 
 
 
 #pragma mark - gesture
+
+
+- (void)managePan:(BOOL)isAdd
+{
+    if (isAdd)
+    {
+        if (!self.viewPan)
+        {
+            UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGesture:)];
+            [self addGestureRecognizer:pan];
+            self.viewPan = pan;
+        }
+    }
+    else
+    {
+        if (self.viewPan)
+        {
+            [self removeGestureRecognizer:self.viewPan];
+            self.viewPan = nil;
+        }
+    }
+}
+
+
+- (void)manageTap:(BOOL)isAdd
+{
+    if (isAdd)
+    {
+        if (!self.viewTap)
+        {
+            UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGesture:)];
+            [self addGestureRecognizer:tap];
+            self.viewTap = tap;
+        }
+    }
+    else
+    {
+        if (self.viewTap)
+        {
+            [self removeGestureRecognizer:self.viewTap];
+            self.viewTap = nil;
+        }
+    }
+}
+
+
 - (void)panGesture:(UIPanGestureRecognizer *)pan
 {
     CGPoint point = [pan locationInView:[self superview]];
@@ -170,6 +226,7 @@
     [self remove];
 }
 
+
 #pragma mark - action
 - (void)show
 {
@@ -195,6 +252,17 @@
 
 
 #pragma mark - property
+
+- (void)setIsCanTouch:(BOOL)isCanTouch
+{
+    if (isCanTouch == self.isCanTouch) {
+        return;
+    }
+    _isCanTouch = isCanTouch;
+    [self managePan:isCanTouch];
+    [self manageTap:isCanTouch];
+}
+
 
 - (void)setBackgroundImage:(UIImage *)backgroundImage
 {

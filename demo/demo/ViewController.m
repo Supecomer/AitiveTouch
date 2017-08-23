@@ -22,12 +22,12 @@
     // Do any additional setup after loading the view, typically from a nib.
     self.view.backgroundColor = [UIColor blackColor];
 
-    // test in self
-//    [self testInView];
-    
     // test in a subview
     [self testViewInView];
     [self testViewInView1];
+    
+    // test in self
+    [self testInView];
     
 }
 
@@ -43,9 +43,13 @@
     CIAitiveTouchView *touchView = [[CIAitiveTouchView alloc] init];
     touchView.backgroundColor = [UIColor orangeColor];
     touchView.frame = CGRectMake(0, 0, 100, 100);
+    touchView.backgroundImage = [UIImage imageNamed:@"background"];
+    touchView.layer.cornerRadius = 50;
+    touchView.unactivityAlpha = 0.5;
     [self.view addSubview:touchView];
     UILabel  *lb = [[UILabel alloc] initWithFrame:CGRectMake(10, 10, 80, 80)];
     lb.text = @"test ";
+    lb.textColor = [UIColor whiteColor];
     [touchView addSubview:lb];
     __block NSInteger times = 1;
     [touchView setTapGestureFuction:^{

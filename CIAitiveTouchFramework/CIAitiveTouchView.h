@@ -44,6 +44,13 @@ typedef void(^voidBlock)(void);
 @property (nonatomic,strong) UIImage  *backgroundImage;
 
 
+/**
+ view is can touch ,defualt is yes
+ */
+@property (nonatomic,assign) BOOL  isCanTouch;
+
+
+
 - (void)setTapGestureFuction:(voidBlock)block;
 
 
